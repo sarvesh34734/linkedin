@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - StripPrefix=2
+
+        - id: post-service
+          uri: lb://POST-SERVICE
+          predicates:
+            - Path=/api/v1/posts/**
+          filters:
+            - StripPrefix=2
+            - name: AuthenticationFilter
+
+        - id: connections-service
+          uri: lb://CONNECTIONS-SERVICE
+          predicates:
+            - Path=/api/v1/connections/**
+          filters:
+            - StripPrefix=2
+            - name: AuthenticationFilter
+
+
+
+jwt.secret.key: hsbdckjnalnckjdsblvnlsknklcnajkdnlkvnlskvcndklznclkndjkbvksdlknlkcnslkndjkbxcnjkdfnjkvndflsnvkljnsdljvnclksdnjkvnlsd
+
+server:
+  port: 9030
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG  # Enable DEBUG logging for Spring Cloud Gateway
+    reactor.netty.http.client: DEBUG          # Optional: Enable DEBUG logging for Netty HTTP client (if using Netty)
+    org.springframework.web.reactive.function.client: DEBUG  # Optional: Enable DEBUG logging for WebClient
+
+
+
+
